@@ -5,10 +5,12 @@
  * Plugin URI: https://wordpress.org/plugins/texty/
  * Author: weDevs
  * Author URI: https://wptexty.com/
- * Version: 1.1.4
+ * Version: 1.1.5
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: texty
+ * Requires at least: 6.8
+ * Requires PHP: 7.4
  */
 defined( 'ABSPATH' ) || exit;
 
@@ -24,7 +26,7 @@ final class Texty {
      *
      * @var string
      */
-    private $version = '1.1.4';
+    private $version = '1.1.5';
 
     /**
      * Instances array
@@ -144,7 +146,7 @@ final class Texty {
      * @return void
      */
     public function appsero_init() {
-        $client = new Appsero\Client( 'd4c17b0f-8f01-4b95-a8de-42b0641eec9a', 'Texty', __FILE__ );
+        $client = new Texty\Dependencies\Appsero\Client( 'd4c17b0f-8f01-4b95-a8de-42b0641eec9a', 'Texty', __FILE__ );
 
         // Active insights
         $client->insights()->init();

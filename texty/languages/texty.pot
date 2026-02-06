@@ -1,37 +1,42 @@
-# Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
+# Copyright (c) 2026 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Texty 1.1.4\n"
+"Project-Id-Version: Texty 1.1.5\n"
 "Report-Msgid-Bugs-To: https://github.com/weDevsOfficial/texty/issues\n"
 "Last-Translator: support@wedevs.com\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-08T10:12:25+00:00\n"
+"POT-Creation-Date: 2026-02-03T07:07:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.8.1\n"
+"X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: texty\n"
 
 #. Plugin Name of the plugin
+#: texty.php
 #: includes/Admin/Menu.php:26
 #: includes/Admin/Menu.php:27
 msgid "Texty"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: texty.php
 msgid "https://wordpress.org/plugins/texty/"
 msgstr ""
 
 #. Description of the plugin
+#: texty.php
 msgid "SMS Notification for WordPress"
 msgstr ""
 
 #. Author of the plugin
+#: texty.php
 msgid "weDevs"
 msgstr ""
 
 #. Author URI of the plugin
+#: texty.php
 msgid "https://wptexty.com/"
 msgstr ""
 
@@ -132,24 +137,44 @@ msgstr ""
 msgid "API Secret"
 msgstr ""
 
-#: includes/Notifications.php:83
+#: includes/Notifications.php:92
 msgid "WordPress"
 msgstr ""
 
-#: includes/Notifications.php:88
+#: includes/Notifications.php:97
 msgid "WooCommerce"
 msgstr ""
 
-#: includes/Notifications.php:93
+#: includes/Notifications.php:102
 msgid "Dokan"
+msgstr ""
+
+#: includes/Notifications/Dokan/CancelledVendor.php:11
+msgid "Vendor - When Order Status is Cancelled"
 msgstr ""
 
 #: includes/Notifications/Dokan/CompleteVendor.php:11
 msgid "Vendor - When Order Status is Complete"
 msgstr ""
 
+#: includes/Notifications/Dokan/FailedVendor.php:11
+msgid "Vendor - When Order Status is Failed"
+msgstr ""
+
 #: includes/Notifications/Dokan/ProcessingVendor.php:11
 msgid "Vendor - When Order Status is Processing"
+msgstr ""
+
+#: includes/Notifications/Dokan/RefundedVendor.php:11
+msgid "Vendor - When Order Status is Refunded"
+msgstr ""
+
+#: includes/Notifications/WC/CancelledAdmin.php:11
+msgid "Admin - When Order Status is Cancelled"
+msgstr ""
+
+#: includes/Notifications/WC/CancelledCustomer.php:11
+msgid "Customer - When Order Status is Cancelled"
 msgstr ""
 
 #: includes/Notifications/WC/CompleteAdmin.php:11
@@ -158,6 +183,14 @@ msgstr ""
 
 #: includes/Notifications/WC/CompleteCustomer.php:11
 msgid "Customer - When Order Status is Complete"
+msgstr ""
+
+#: includes/Notifications/WC/FailedAdmin.php:11
+msgid "Admin - When Order Status is Failed"
+msgstr ""
+
+#: includes/Notifications/WC/FailedCustomer.php:11
+msgid "Customer - When Order Status is Failed"
 msgstr ""
 
 #: includes/Notifications/WC/HoldCustomer.php:11
@@ -170,6 +203,14 @@ msgstr ""
 
 #: includes/Notifications/WC/ProcessingCustomer.php:11
 msgid "Customer - When Order Status is Processing"
+msgstr ""
+
+#: includes/Notifications/WC/RefundedAdmin.php:11
+msgid "Admin - When Order Status is Refunded"
+msgstr ""
+
+#: includes/Notifications/WC/RefundedCustomer.php:11
+msgid "Customer - When Order Status is Refunded"
 msgstr ""
 
 #: includes/Notifications/WP/Comment.php:18

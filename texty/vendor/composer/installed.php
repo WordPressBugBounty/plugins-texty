@@ -11,14 +11,12 @@
     ),
     'versions' => array(
         'appsero/client' => array(
-            'pretty_version' => 'dev-develop',
-            'version' => 'dev-develop',
+            'pretty_version' => 'v2.0.5',
+            'version' => '2.0.5.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../appsero/client',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
-            'reference' => '3b68f17ac29d56d14a78cc4817c4b80f692e4e3a',
+            'aliases' => array(),
+            'reference' => 'b7766ee150cc8e28125a818a11e770feb9899a71',
             'dev_requirement' => false,
         ),
         'tareq1988/wp-sms' => array(

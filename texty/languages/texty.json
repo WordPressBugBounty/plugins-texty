@@ -125,11 +125,31 @@
             null,
             ""
          ],
+         "Vendor - When Order Status is Cancelled": [
+            null,
+            ""
+         ],
          "Vendor - When Order Status is Complete": [
             null,
             ""
          ],
+         "Vendor - When Order Status is Failed": [
+            null,
+            ""
+         ],
          "Vendor - When Order Status is Processing": [
+            null,
+            ""
+         ],
+         "Vendor - When Order Status is Refunded": [
+            null,
+            ""
+         ],
+         "Admin - When Order Status is Cancelled": [
+            null,
+            ""
+         ],
+         "Customer - When Order Status is Cancelled": [
             null,
             ""
          ],
@@ -138,6 +158,14 @@
             ""
          ],
          "Customer - When Order Status is Complete": [
+            null,
+            ""
+         ],
+         "Admin - When Order Status is Failed": [
+            null,
+            ""
+         ],
+         "Customer - When Order Status is Failed": [
             null,
             ""
          ],
@@ -150,6 +178,14 @@
             ""
          ],
          "Customer - When Order Status is Processing": [
+            null,
+            ""
+         ],
+         "Admin - When Order Status is Refunded": [
+            null,
+            ""
+         ],
+         "Customer - When Order Status is Refunded": [
             null,
             ""
          ],
