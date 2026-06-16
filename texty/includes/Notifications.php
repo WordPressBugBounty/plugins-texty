@@ -20,6 +20,66 @@ class Notifications {
     private $notifications = [];
 
     /**
+     * Whether built-in notifications have been registered
+     *
+     * @var bool
+     */
+    private $registered = false;
+
+    /**
+     * The notification currently driving a send-pipeline call.
+     *
+     * `Notification::send()` sets this around its `$gateway->send()` loop so
+     * that `Dispatcher::log_sms` (hooked on `texty_after_send_sms`) can write
+     * the originating notification's id + group into the SmsStat row without
+     * having to pass them through the gateway pipeline.
+     *
+     * @var \Texty\Notifications\Notification|null
+     */
+    private $active = null;
+
+    /**
+     * Set the active notification for the duration of a send.
+     *
+     * @param \Texty\Notifications\Notification|null $notification
+     *
+     * @return void
+     */
+    public function set_active( $notification ) {
+        $this->active = $notification;
+    }
+
+    /**
+     * Get the active notification, if any.
+     *
+     * @return \Texty\Notifications\Notification|null
+     */
+    public function get_active() {
+        return $this->active;
+    }
+
+    /**
+     * Clear the active notification.
+     *
+     * @return void
+     */
+    public function clear_active() {
+        $this->active = null;
+    }
+
+    /**
+     * Register a notification
+     *
+     * @param string $key       Notification identifier
+     * @param string $classname Fully qualified class name
+     *
+     * @return void
+     */
+    public function register( $key, $classname ) {
+        $this->notifications[ $key ] = $classname;
+    }
+
+    /**
      * Get a notification class
      *
      * @param string $key
@@ -42,43 +102,23 @@ class Notifications {
      * @return array
      */
     public function all() {
-        if ( $this->notifications ) {
-            return $this->notifications;
+        if ( ! $this->registered ) {
+            $this->notifications = [
+                'registration' => __NAMESPACE__ . '\Notifications\WP\Registration',
+                'comment'      => __NAMESPACE__ . '\Notifications\WP\Comment',
+            ];
+
+            /**
+             * Fires to allow registration of custom notifications.
+             *
+             * @param Notifications $manager The notifications manager instance
+             */
+            do_action( 'texty_register_notifications', $this );
+
+            $this->registered = true;
         }
 
-        $notifications = [
-            'registration' => __NAMESPACE__ . '\Notifications\WP\Registration',
-            'comment'      => __NAMESPACE__ . '\Notifications\WP\Comment',
-        ];
-
-        if ( class_exists( 'WooCommerce' ) ) {
-            // WC Admin
-            $notifications['order_admin_processing'] = __NAMESPACE__ . '\Notifications\WC\ProcessingAdmin';
-            $notifications['order_admin_complete']   = __NAMESPACE__ . '\Notifications\WC\CompleteAdmin';
-            $notifications['order_admin_cancelled']  = __NAMESPACE__ . '\Notifications\WC\CancelledAdmin';
-            $notifications['order_admin_failed']     = __NAMESPACE__ . '\Notifications\WC\FailedAdmin';
-            $notifications['order_admin_refunded']   = __NAMESPACE__ . '\Notifications\WC\RefundedAdmin';
-
-            // WC Customers
-            $notifications['order_customer_hold']       = __NAMESPACE__ . '\Notifications\WC\HoldCustomer';
-            $notifications['order_customer_processing'] = __NAMESPACE__ . '\Notifications\WC\ProcessingCustomer';
-            $notifications['order_customer_complete']   = __NAMESPACE__ . '\Notifications\WC\CompleteCustomer';
-            $notifications['order_customer_cancelled']  = __NAMESPACE__ . '\Notifications\WC\CancelledCustomer';
-            $notifications['order_customer_failed']     = __NAMESPACE__ . '\Notifications\WC\FailedCustomer';
-            $notifications['order_customer_refunded']   = __NAMESPACE__ . '\Notifications\WC\RefundedCustomer';
-        }
-
-        if ( class_exists( 'WeDevs_Dokan' ) ) {
-            $notifications['order_dokan_processing'] = __NAMESPACE__ . '\Notifications\Dokan\ProcessingVendor';
-            $notifications['order_dokan_complete']   = __NAMESPACE__ . '\Notifications\Dokan\CompleteVendor';
-            $notifications['order_dokan_cancelled']  = __NAMESPACE__ . '\Notifications\Dokan\CancelledVendor';
-            $notifications['order_dokan_failed']     = __NAMESPACE__ . '\Notifications\Dokan\FailedVendor';
-            $notifications['order_dokan_refunded']   = __NAMESPACE__ . '\Notifications\Dokan\RefundedVendor';
-        }
-
-        $this->notifications = apply_filters( 'texty_available_notifications', $notifications );
-
-        return $this->notifications;
+        return apply_filters( 'texty_available_notifications', $this->notifications );
     }
 
     /**
@@ -90,17 +130,17 @@ class Notifications {
         return apply_filters( 'texty_notification_groups', [ // phpcs:ignore
             'wp' => [
                 'title'       => __( 'WordPress', 'texty' ),
-                'description' => '',
+                'description' => __( 'Default WordPress system alerts', 'texty' ),
                 'available'   => true,
             ],
             'wc' => [
                 'title'       => __( 'WooCommerce', 'texty' ),
-                'description' => '',
+                'description' => __( 'WooCommerce order and customer alerts', 'texty' ),
                 'available'   => class_exists( 'WooCommerce' ) ? true : false,
             ],
             'dokan' => [
                 'title'       => __( 'Dokan', 'texty' ),
-                'description' => '',
+                'description' => __( 'Vendor and marketplace alerts', 'texty' ),
                 'available'   => class_exists( 'WeDevs_Dokan' ) ? true : false,
             ],
         ] ); // phpcs:ignore
