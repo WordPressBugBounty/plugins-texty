@@ -6,8 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'WeDevs\\WPKit\\' => array($vendorDir . '/wedevs/wp-kit/src'),
     'Texty\\Dependencies\\' => array($baseDir . '/dependencies'),
     'Texty\\' => array($baseDir . '/includes'),
-    'Appsero\\' => array($vendorDir . '/appsero/client/src'),
 );

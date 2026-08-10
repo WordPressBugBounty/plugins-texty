@@ -5,7 +5,7 @@
  * Plugin URI: https://wordpress.org/plugins/texty/
  * Author: weDevs
  * Author URI: https://wptexty.com/
- * Version: 2.0.1
+ * Version: 2.0.2
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: texty
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 require __DIR__ . '/vendor/autoload.php';
 
-use WeDevs\WPKit\DataLayer\DataLayerFactory;
+use Texty\Dependencies\WeDevs\WPKit\DataLayer\DataLayerFactory;
 
 /**
  * Texty Class
@@ -28,7 +28,7 @@ final class Texty {
      *
      * @var string
      */
-    private $version = '2.0.1';
+    private $version = '2.0.2';
 
     /**
      * Instances array
@@ -86,6 +86,7 @@ final class Texty {
             new Texty\Admin();
         }
 
+        new Texty\Assets();
         new Texty\Api();
         new Texty\Dispatcher();
         new Texty\Compliance();
@@ -114,6 +115,16 @@ final class Texty {
                 Texty\Models\SmsStat::class,
                 Texty\Models\SmsStatStore::class
             );
+
+            /**
+             * Fires after the DataLayerFactory is initialized and Texty's own
+             * stores are registered. Add-ons should register their DataLayer
+             * models/stores here (via DataLayerFactory::register_store) so the
+             * factory is guaranteed ready and prefixed. Runs before texty_loaded.
+             *
+             * @param Texty $texty The main plugin instance.
+             */
+            do_action( 'texty_datalayer_init', $this );
         } catch ( \Exception $e ) {
             error_log( 'Texty DataLayer Init Error: ' . $e->getMessage() );
         }
