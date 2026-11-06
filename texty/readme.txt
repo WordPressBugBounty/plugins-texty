@@ -3,9 +3,9 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate link: https://tareq.co/donate/
 Tags: sms, notification, twilio, woocommerce, dokan
 Requires at least: 6.8
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.2
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,8 @@ Texty integrates with 3rd party SMS providers to add support for text messaging.
 
 Texty is built with developers in mind. Register custom gateways, add new notification types, modify messages on the fly, or integrate with any WordPress plugin. See the [Developer Documentation](https://github.com/getdokan/texty#developer-documentation) for details.
 
+Message placeholders such as `{order_id}` can be added, overridden or removed with the `texty_notification_placeholders` filter (or `texty_notification_placeholders_{notification_id}` for one notification). Changes appear in the "Available variables" lists and the order "Send SMS" box, and are applied when messages are sent.
+
 = Disclaimer =
 
 Texty integrates with 3rd party providers to send SMS messages. Please review each provider's terms before use:
@@ -87,6 +89,18 @@ Texty uses [Appsero](https://appsero.com) SDK to collect some telemetry data upo
 Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users.
 
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
+
+= External services: outgoing IP detection =
+
+Some SMS gateways (currently SSL Wireless) only accept requests from whitelisted server IPs. For those gateways, Texty finds your server's outgoing IPv4 address by asking a public "what is my IP" service, so it can show you which IP to whitelist. This happens only when the gateway's settings page is opened, or after a message is sent through such a gateway, and the result is cached for 12 hours per server. The request contains no site or customer data; the service only sees your server's IP address.
+
+Services used, in order, until one answers:
+
+- ipify — [api.ipify.org](https://api.ipify.org) ([privacy policy](https://www.ipify.org/))
+- Amazon Web Services — [checkip.amazonaws.com](https://checkip.amazonaws.com) ([privacy notice](https://aws.amazon.com/privacy/))
+- icanhazip (Cloudflare) — [ipv4.icanhazip.com](https://ipv4.icanhazip.com) ([privacy policy](https://www.cloudflare.com/privacypolicy/))
+
+To change or disable these lookups, use the `texty_egress_ip_services` filter (return an empty array to disable them; you can still add IPs by hand).
 
 == Installation ==
 
@@ -149,6 +163,23 @@ Yes. Use the `texty_register_notifications` action hook to register custom notif
 5. WooCommerce customer notification
 
 == Changelog ==
+
+= v2.2.0 (6 Nov, 2026) =
+
+- **New:** 20 new SMS gateways: Africa's Talking, AWS End User Messaging, Bandwidth, Bird, Brevo, BulkGate, BulkSMS, ClickSend, D7 Networks, Fast2SMS, Infobip, MSG91, Octopush, SMSAPI, SMSGlobal, Sinch, Taqnyat, Telnyx, Textmagic and Unifonic. MSG91 and Fast2SMS are marked Beta.
+- **New:** Each gateway's settings page links to the provider's API documentation.
+- **Update:** Saved gateway secrets (API keys, tokens) are masked on the settings page and in the REST API.
+- **New:** Developers can add, override or remove message placeholders (like `{order_id}`) with the `texty_notification_placeholders` filter. Custom placeholders show up in the "Available variables" lists and the order "Send SMS" box, and are filled in when messages are sent.
+- **New:** Gateways that require IP whitelisting (SSL Wireless) show your server's outgoing IP on their settings page, with copy buttons. On sites with several servers or a load balancer, every server's IP is listed as it sends, marked Allowed or Blocked, and you can add your host's fixed outgoing IP by hand. A blocked send's error now names the exact IP to whitelist, and SSL Wireless requests always use IPv4.
+- **New:** Send an SMS from the WooCommerce order screen. A "Send SMS" box above Order notes suggests the order's billing, shipping and Dokan vendor numbers as you type (or enter any number), fills order details like {order_id} and {order_total}, counts characters and SMS parts (including Bangla/Unicode), and records the message as a private order note. Available to admins and shop managers.
+- **New:** Automatic order SMS (processing, completed, vendor and admin alerts) now add a private order note with the message and each recipient's result. Turn off with `add_filter( 'texty_add_order_sms_note', '__return_false' );`.
+- **New:** SSL Wireless (iSMS Plus, Bangladesh) gateway.
+- **New:** Quick Send has its own page under Texty → Quick Send, with a shortcut on the dashboard. The phone number field now starts on your store's country.
+- **New:** SMS notifications are sent in the background (using WooCommerce's Action Scheduler) instead of during checkout or order updates, so those pages no longer wait on the SMS gateway. Queued messages show as Pending in Logs, with Send now and Cancel buttons.
+- **Changed:** Because notifications are sent in the background, they go out shortly after the event (usually within a minute) rather than instantly. Code that filters Texty messages now runs in that background request, without the shopper's session. To keep the previous immediate sending, add `add_filter( 'texty_send_async', '__return_false' );`. Sites without WooCommerce keep sending immediately.
+- **Fix:** Logs → All and the dashboard counters no longer show stale or empty data on sites with a persistent object cache.
+- **Fix:** SMS that are not sent because Pause All Notifications is on, no gateway is active or the recipient number is missing now show in Logs as Failed instead of leaving no record, so the order note's "details in Texty → Logs" has an entry to point to.
+- **Update:** Faster Logs, CSV export and dashboard on sites with many messages.
 
 = v2.0.2 (10 Aug, 2026) =
 
